@@ -11,7 +11,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class PDFProcessor:
     """Process PDF files and extract text chunks"""
     
@@ -25,6 +24,9 @@ class PDFProcessor:
         """
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
+        
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError("chunk_overlap must be smaller than chunk_size")
     
     def extract_text_from_pdf(self, pdf_path: str) -> List[Tuple[str, int]]:
         """
@@ -53,13 +55,14 @@ class PDFProcessor:
             logger.error(f"Error extracting text from PDF {pdf_path}: {str(e)}")
             raise
     
-    def create_chunks(self, text: str, page_number: int) -> List[dict]:
+    def create_chunks(self, text: str, page_number: int, source_name: str) -> List[dict]:
         """
         Split text into overlapping chunks
         
         Args:
             text: Text to chunk
             page_number: Page number reference
+            source_name: Source filename
             
         Returns:
             List of chunk dictionaries with metadata
@@ -72,11 +75,13 @@ class PDFProcessor:
             return chunks
         
         # Create overlapping chunks
-        for i in range(0, len(text), self.chunk_size - self.chunk_overlap):
+        for idx, i in enumerate(range(0, len(text), self.chunk_size - self.chunk_overlap)):
             chunk = text[i:i + self.chunk_size]
             
             if len(chunk.strip()) > 50:  # Ignore very small chunks
                 chunks.append({
+                    "chunk_id": f"{source_name}_p{page_number}_{idx}",
+                    "source": source_name,
                     "content": chunk,
                     "page": page_number,
                     "start_idx": i,
@@ -97,9 +102,10 @@ class PDFProcessor:
         """
         pages_content = self.extract_text_from_pdf(pdf_path)
         all_chunks = []
+        source_name = Path(pdf_path).name
         
         for text, page_num in pages_content:
-            chunks = self.create_chunks(text, page_num)
+            chunks = self.create_chunks(text, page_num, source_name)
             all_chunks.extend(chunks)
         
         logger.info(f"Created {len(all_chunks)} chunks from {pdf_path}")
@@ -150,3 +156,18 @@ def ingest_manuals(manuals_dir: str, chunk_size: int = 1024, chunk_overlap: int 
     """
     processor = PDFProcessor(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     return processor.process_directory(manuals_dir)
+
+
+if __name__ == "__main__":
+    manuals_dir = "manual-bot/data/manuals"
+    documents = ingest_manuals(manuals_dir)
+
+    for filename, chunks in documents.items():
+        print(f"\nFile: {filename}")
+        print(f"Total chunks: {len(chunks)}")
+
+        for chunk in chunks[:3]:
+            print("-" * 60)
+            print(f"Page: {chunk['page']}")
+            print(chunk["content"][:500])
+            print()

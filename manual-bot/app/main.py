@@ -86,8 +86,7 @@ async def startup_event():
         
         # Initialize RAG system
         rag_system = RAGSystem(
-            db_path=settings.CHROMA_DB_PATH,
-            openai_api_key=settings.OPENAI_API_KEY
+        db_path=settings.CHROMA_DB_PATH
         )
         
         logger.info("RAG system initialized successfully")
@@ -345,7 +344,7 @@ async def get_config():
     return {
         "app_name": settings.APP_NAME,
         "version": settings.APP_VERSION,
-        "model": settings.OPENAI_MODEL,
+        "model": settings.OLLAMA_MODEL,
         "chunk_size": settings.CHUNK_SIZE,
         "chunk_overlap": settings.CHUNK_OVERLAP,
         "top_k_chunks": settings.TOP_K_CHUNKS,
