@@ -71,35 +71,52 @@ class VectorDatabase:
                 logger.error(f"Error adding documents to database: {str(e)}")
                 raise
     
-    def search(self, query: str, top_k: int = 5) -> List[dict]:
+    def search(self, query: str, top_k: int = None) -> List[dict]:
         """
-        Search for relevant documents
+        Search for relevant documents with dynamic filtering based on relevance threshold
         
         Args:
             query: Search query
-            top_k: Number of top results to return
+            top_k: Maximum number of top results to consider (will be filtered)
             
         Returns:
-            List of relevant documents with metadata
+            List of relevant documents with metadata, filtered by relevance threshold
         """
+        top_k = top_k or settings.TOP_K_CHUNKS
+        
         try:
             results = self.collection.query(
                 query_texts=[query],
                 n_results=top_k
             )
             
-            # Format results
+            # Format results with filtering by relevance
             documents = []
             if results and results["documents"] and len(results["documents"]) > 0:
                 for i, doc in enumerate(results["documents"][0]):
                     metadata = results["metadatas"][0][i] if results["metadatas"] and len(results["metadatas"]) > 0 else {}
-                    documents.append({
-                        "content": doc,
-                        "page": metadata.get("page", "Unknown"),
-                        "distance": results["distances"][0][i] if results["distances"] and len(results["distances"]) > 0 else None
-                    })
+                    distance = results["distances"][0][i] if results["distances"] and len(results["distances"]) > 0 else None
+                    
+                    # Filter by relevance threshold
+                    if distance is not None and distance <= settings.MAX_RELEVANT_DISTANCE:
+                        documents.append({
+                            "content": doc,
+                            "page": metadata.get("page", "Unknown"),
+                            "distance": distance
+                        })
             
-            logger.info(f"Found {len(documents)} relevant documents for query")
+            # Fallback: if no documents passed threshold, keep best one
+            if not documents and results and results["documents"] and len(results["documents"]) > 0:
+                metadata = results["metadatas"][0][0] if results["metadatas"] and len(results["metadatas"]) > 0 else {}
+                distance = results["distances"][0][0] if results["distances"] and len(results["distances"]) > 0 else None
+                documents = [{
+                    "content": results["documents"][0][0],
+                    "page": metadata.get("page", "Unknown"),
+                    "distance": distance
+                }]
+                logger.warning(f"No documents matched threshold {settings.MAX_RELEVANT_DISTANCE}, using best result as fallback")
+            
+            logger.info(f"Found {len(documents)} relevant documents for query (threshold: {settings.MAX_RELEVANT_DISTANCE})")
             return documents
             
         except Exception as e:

@@ -31,7 +31,9 @@ class Settings:
     # Model hyperparameters
     CHUNK_SIZE: int = 1024
     CHUNK_OVERLAP: int = 100
-    TOP_K_CHUNKS: int = 5
+    TOP_K_CHUNKS: int = 8  # Maximum cap, not fixed final count
+    MIN_RELEVANT_CHUNKS: int = 1
+    MAX_RELEVANT_DISTANCE: float = 0.35  # Relevance threshold (0-1 scale)
     TEMPERATURE: float = 0.7
     MAX_TOKENS: int = 1000
 

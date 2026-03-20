@@ -42,7 +42,7 @@ rag_system: Optional[RAGSystem] = None
 class QuestionRequest(BaseModel):
     """Request model for questions"""
     question: str = Field(..., description="User question about the vehicle manual")
-    top_k: Optional[int] = Field(5, description="Number of relevant chunks to retrieve")
+    top_k: Optional[int] = Field(8, description="Maximum number of chunks to retrieve before filtering")
 
 
 class AnswerResponse(BaseModel):
@@ -188,7 +188,7 @@ async def ask_question(request: QuestionRequest):
 
 
 @app.get("/retrieve", tags=["QA"])
-async def retrieve_documents(query: str, top_k: int = 5):
+async def retrieve_documents(query: str, top_k: int = 8):
     """
     Retrieve relevant documents for a query without generating an answer
     
