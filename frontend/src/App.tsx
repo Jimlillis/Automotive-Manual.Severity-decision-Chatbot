@@ -1,9 +1,15 @@
-import Dashboard from './pages/dashboard';
-import './App.css'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from '../src/pages/dashboard'; 
+import ChatPage from '../src/pages/ChatPage'; 
 
 function App() {
   return (
-    <Dashboard />
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/chat" element={<ChatPage />} />
+      </Routes>
+    </Router>
   );
 }
 

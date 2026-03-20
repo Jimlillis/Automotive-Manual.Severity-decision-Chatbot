@@ -1,11 +1,15 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Εισαγωγή του hook
 import styles from './Buttons.module.css';
 
 const EmergencyButton: React.FC = () => {
+  const navigate = useNavigate(); // Αρχικοποίηση
+
   const handleClick = () => {
     console.log('Emergency chatbot initiated');
-    // Εδώ θα μπει η λογική αργότερα
+    // Πλοήγηση στο path /chat
+    navigate('../../pages/ChatPage.tsx'); 
   };
 
   return (
