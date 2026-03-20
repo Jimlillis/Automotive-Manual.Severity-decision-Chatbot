@@ -5,9 +5,7 @@ RAG (Retrieval-Augmented Generation) system for answering questions using vehicl
 import logging
 from typing import List, Dict, Any, Optional
 import chromadb
-from chromadb.config import Settings as ChromaSettings
-from openai import OpenAI
-import time
+import requests
 
 from app.config import settings
 from app.ingest import ingest_manuals
@@ -32,14 +30,8 @@ class VectorDatabase:
         self.db_path = db_path
         self.collection_name = collection_name
         
-        # Initialize Chroma client
-        chroma_settings = ChromaSettings(
-            chroma_db_impl="duckdb+parquet",
-            persist_directory=db_path,
-            anonymized_telemetry=False,
-        )
-        
-        self.client = chromadb.Client(chroma_settings)
+        # Initialize Chroma client (new API)
+        self.client = chromadb.PersistentClient(path=db_path)
         self.collection = self.client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"}
@@ -59,9 +51,13 @@ class VectorDatabase:
         for i in range(0, len(documents), batch_size):
             batch = documents[i:i + batch_size]
             
-            ids = [f"doc_{int(time.time() * 1000)}_{j}" for j in range(len(batch))]
+            ids = [f"doc_{hash(batch[j]['content'])}_{j}" for j in range(len(batch))]
             documents_text = [doc["content"] for doc in batch]
-            metadatas = [{"page": doc["page"]} for doc in batch]
+            metadatas = [{
+                "page": doc["page"],
+                "source": doc.get("source", ""),
+                "chunk_id": doc.get("chunk_id", "")
+            } for doc in batch]
             
             try:
                 self.collection.add(
@@ -75,35 +71,52 @@ class VectorDatabase:
                 logger.error(f"Error adding documents to database: {str(e)}")
                 raise
     
-    def search(self, query: str, top_k: int = 5) -> List[dict]:
+    def search(self, query: str, top_k: int = None) -> List[dict]:
         """
-        Search for relevant documents
+        Search for relevant documents with dynamic filtering based on relevance threshold
         
         Args:
             query: Search query
-            top_k: Number of top results to return
+            top_k: Maximum number of top results to consider (will be filtered)
             
         Returns:
-            List of relevant documents with metadata
+            List of relevant documents with metadata, filtered by relevance threshold
         """
+        top_k = top_k or settings.TOP_K_CHUNKS
+        
         try:
             results = self.collection.query(
                 query_texts=[query],
                 n_results=top_k
             )
             
-            # Format results
+            # Format results with filtering by relevance
             documents = []
             if results and results["documents"] and len(results["documents"]) > 0:
                 for i, doc in enumerate(results["documents"][0]):
                     metadata = results["metadatas"][0][i] if results["metadatas"] and len(results["metadatas"]) > 0 else {}
-                    documents.append({
-                        "content": doc,
-                        "page": metadata.get("page", "Unknown"),
-                        "distance": results["distances"][0][i] if results["distances"] and len(results["distances"]) > 0 else None
-                    })
+                    distance = results["distances"][0][i] if results["distances"] and len(results["distances"]) > 0 else None
+                    
+                    # Filter by relevance threshold
+                    if distance is not None and distance <= settings.MAX_RELEVANT_DISTANCE:
+                        documents.append({
+                            "content": doc,
+                            "page": metadata.get("page", "Unknown"),
+                            "distance": distance
+                        })
             
-            logger.info(f"Found {len(documents)} relevant documents for query")
+            # Fallback: if no documents passed threshold, keep best one
+            if not documents and results and results["documents"] and len(results["documents"]) > 0:
+                metadata = results["metadatas"][0][0] if results["metadatas"] and len(results["metadatas"]) > 0 else {}
+                distance = results["distances"][0][0] if results["distances"] and len(results["distances"]) > 0 else None
+                documents = [{
+                    "content": results["documents"][0][0],
+                    "page": metadata.get("page", "Unknown"),
+                    "distance": distance
+                }]
+                logger.warning(f"No documents matched threshold {settings.MAX_RELEVANT_DISTANCE}, using best result as fallback")
+            
+            logger.info(f"Found {len(documents)} relevant documents for query (threshold: {settings.MAX_RELEVANT_DISTANCE})")
             return documents
             
         except Exception as e:
@@ -126,28 +139,25 @@ class VectorDatabase:
 class RAGSystem:
     """Main RAG system combining retrieval and generation"""
     
-    def __init__(self, db_path: str = None, openai_api_key: str = None):
+    def __init__(self, db_path: str = None):
         """
         Initialize RAG system
         
         Args:
             db_path: Path to vector database
-            openai_api_key: OpenAI API key
         """
         self.db_path = db_path or settings.CHROMA_DB_PATH
-        self.openai_api_key = openai_api_key or settings.OPENAI_API_KEY
+        self.ollama_base_url = settings.OLLAMA_BASE_URL
+        self.ollama_model = settings.OLLAMA_MODEL
         
         # Initialize vector database
         self.vector_db = VectorDatabase(self.db_path, settings.COLLECTION_NAME)
         
-        # Initialize OpenAI client
-        self.llm_client = OpenAI(api_key=self.openai_api_key)
-        
-        self.model = settings.OPENAI_MODEL
         self.temperature = settings.TEMPERATURE
         self.max_tokens = settings.MAX_TOKENS
         
-        logger.info("Initialized RAG system")
+        logger.info(f"Initialized RAG system with Ollama model: {self.ollama_model}")
+        logger.info(f"Ollama URL: {self.ollama_base_url}")
     
     def ingest_manuals(self, manuals_dir: str) -> int:
         """
@@ -205,7 +215,7 @@ class RAGSystem:
     
     def generate_answer(self, question: str, context_documents: List[dict]) -> Dict[str, Any]:
         """
-        Generate an answer using retrieved documents
+        Generate an answer using retrieved documents with Ollama
         
         Args:
             question: User question
@@ -220,7 +230,7 @@ class RAGSystem:
                 return {
                     "answer": "I couldn't find relevant information in the manuals to answer your question.",
                     "sources": "No relevant manual sections found",
-                    "model": self.model,
+                    "model": self.ollama_model,
                     "tokens_used": 0
                 }
             
@@ -231,27 +241,34 @@ class RAGSystem:
             system_message = get_system_message()
             user_message = get_context_prompt(context, question)
             
-            # Call LLM
-            response = self.llm_client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    system_message,
+            # Call Ollama via API
+            payload = {
+                "model": self.ollama_model,
+                "messages": [
+                    {"role": "system", "content": system_message["content"]},
                     {"role": "user", "content": user_message}
                 ],
-                temperature=self.temperature,
-                max_tokens=self.max_tokens
+                "stream": False,
+                "temperature": self.temperature
+            }
+            
+            response = requests.post(
+                f"{self.ollama_base_url}/api/chat",
+                json=payload,
+                timeout=120
             )
             
-            answer = response.choices[0].message.content
-            tokens_used = response.usage.total_tokens if hasattr(response, 'usage') else 0
+            response.raise_for_status()
+            data = response.json()
+            answer = data["message"]["content"]
             
-            logger.info(f"Generated answer using {tokens_used} tokens")
+            logger.info(f"Generated answer using Ollama model: {self.ollama_model}")
             
             return {
                 "answer": answer,
                 "sources": sources,
-                "model": self.model,
-                "tokens_used": tokens_used
+                "model": self.ollama_model,
+                "tokens_used": 0
             }
             
         except Exception as e:
@@ -259,7 +276,7 @@ class RAGSystem:
             return {
                 "answer": f"Error generating answer: {str(e)}",
                 "sources": "",
-                "model": self.model,
+                "model": self.ollama_model,
                 "tokens_used": 0
             }
     

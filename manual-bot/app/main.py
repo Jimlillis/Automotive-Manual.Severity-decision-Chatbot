@@ -42,7 +42,7 @@ rag_system: Optional[RAGSystem] = None
 class QuestionRequest(BaseModel):
     """Request model for questions"""
     question: str = Field(..., description="User question about the vehicle manual")
-    top_k: Optional[int] = Field(5, description="Number of relevant chunks to retrieve")
+    top_k: Optional[int] = Field(8, description="Maximum number of chunks to retrieve before filtering")
 
 
 class AnswerResponse(BaseModel):
@@ -86,8 +86,7 @@ async def startup_event():
         
         # Initialize RAG system
         rag_system = RAGSystem(
-            db_path=settings.CHROMA_DB_PATH,
-            openai_api_key=settings.OPENAI_API_KEY
+        db_path=settings.CHROMA_DB_PATH
         )
         
         logger.info("RAG system initialized successfully")
@@ -189,7 +188,7 @@ async def ask_question(request: QuestionRequest):
 
 
 @app.get("/retrieve", tags=["QA"])
-async def retrieve_documents(query: str, top_k: int = 5):
+async def retrieve_documents(query: str, top_k: int = 8):
     """
     Retrieve relevant documents for a query without generating an answer
     
@@ -345,7 +344,7 @@ async def get_config():
     return {
         "app_name": settings.APP_NAME,
         "version": settings.APP_VERSION,
-        "model": settings.OPENAI_MODEL,
+        "model": settings.OLLAMA_MODEL,
         "chunk_size": settings.CHUNK_SIZE,
         "chunk_overlap": settings.CHUNK_OVERLAP,
         "top_k_chunks": settings.TOP_K_CHUNKS,

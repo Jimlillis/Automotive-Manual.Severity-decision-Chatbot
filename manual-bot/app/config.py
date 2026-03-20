@@ -15,9 +15,9 @@ class Settings:
     APP_PORT: int = int(os.getenv("APP_PORT", 8000))
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
     
-    # OpenAI Configuration
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4")
+    # Ollama Configuration
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
     
     # Chroma Vector Database
     CHROMA_DB_PATH: str = os.getenv("CHROMA_DB_PATH", "./data/chroma_db")
@@ -31,14 +31,10 @@ class Settings:
     # Model hyperparameters
     CHUNK_SIZE: int = 1024
     CHUNK_OVERLAP: int = 100
-    TOP_K_CHUNKS: int = 5
+    TOP_K_CHUNKS: int = 8  # Maximum cap, not fixed final count
+    MIN_RELEVANT_CHUNKS: int = 1
+    MAX_RELEVANT_DISTANCE: float = 0.35  # Relevance threshold (0-1 scale)
     TEMPERATURE: float = 0.7
     MAX_TOKENS: int = 1000
-    
-    @classmethod
-    def validate(cls):
-        """Validate required settings"""
-        if not cls.OPENAI_API_KEY:
-            raise ValueError("OPENAI_API_KEY is not set. Please configure it in .env file")
 
 settings = Settings()
