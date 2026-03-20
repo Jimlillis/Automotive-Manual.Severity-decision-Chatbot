@@ -41,9 +41,9 @@ const ChatPage: React.FC = () => {
       const data = await response.json();
       
       if (data.reply) {
-        setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
+        setMessages(prev => [...prev, { role: 'model', text: data.reply }]); // Προσθέτουμε την απάντηση του μοντέλου στα μηνύματα
       }
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { role: 'model', text: "❌ Σφάλμα σύνδεσης με τον διακομιστή." }]);
     } finally {
       setIsLoading(false);
@@ -69,13 +69,17 @@ const ChatPage: React.FC = () => {
         )}
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] p-3 rounded-2xl shadow ${
-              msg.role === 'user' ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white text-gray-800 rounded-tl-none'
-            }`}>
+            <div
+              className={`max-w-[80%] p-3 rounded-2xl shadow ${
+                msg.role === 'user'
+                  ? 'bg-blue-600 text-white rounded-tr-none'
+                  : 'bg-white text-gray-800 rounded-tl-none'
+              }`}
+            >
               {msg.text}
             </div>
           </div>
-        )}
+        ))}
         {isLoading && <div className="text-sm text-gray-400 animate-pulse">Το AI επεξεργάζεται...</div>}
         <div ref={scrollRef} />
       </div>

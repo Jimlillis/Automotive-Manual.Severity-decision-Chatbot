@@ -9,7 +9,7 @@ const EmergencyButton: React.FC = () => {
   const handleClick = () => {
     console.log('Emergency chatbot initiated');
     // Πλοήγηση στο path /chat
-    navigate('../../pages/ChatPage.tsx'); 
+    navigate('/chat'); 
   };
 
   return (
