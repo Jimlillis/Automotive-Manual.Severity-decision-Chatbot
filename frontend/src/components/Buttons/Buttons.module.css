@@ -1,0 +1,55 @@
+.button {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  padding: 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  text-align: left;
+  transition: filter 0.2s ease;
+  color: white; /* Για να φαίνεται το κείμενο */
+}
+
+.button:hover {
+  filter: brightness(110%);
+}
+
+.emergency {
+  background-color: #dc2626; /* Κόκκινο */
+}
+
+.manual {
+  background-color: #2563eb; /* Μπλε */
+}
+
+.iconContainer {
+  background-color: rgba(255, 255, 255, 0.2); /* Λευκό με διαφάνεια */
+  padding: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  color: white;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 5px;
+}

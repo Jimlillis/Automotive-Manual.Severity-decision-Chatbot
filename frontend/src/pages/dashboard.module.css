@@ -1,0 +1,54 @@
+.container {
+  padding: 40px;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.appTitle {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.appSubtitle {
+  margin: 5px 0 0 0;
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 80px; /* Κενό ανάμεσα στις σειρές */
+}
+
+/* Επάνω σειρά: 2 στήλες, ίσες */
+.topRowGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default για κινητά */
+  gap: 30px;
+}
+
+/* Κάτω σειρά: 2 στήλες, ίσες */
+.bottomRowGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default για κινητά */
+  gap: 30px;
+}
+
+.gridItem {
+  height: 100%;
+}
+
+/* Media Query για μεγάλες οθόνες (Desktop) */
+@media (min-width: 1024px) {
+  .topRowGrid {
+    grid-template-columns: 1fr 1fr; /* 2 ίσες στήλες */
+  }
+  
+  .bottomRowGrid {
+    grid-template-columns: 1fr 1fr; /* 2 ίσες στήλες */
+  }
+}

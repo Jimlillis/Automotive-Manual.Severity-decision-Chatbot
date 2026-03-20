@@ -1,0 +1,47 @@
+.card {
+  background-color: #2a303c;
+  padding: 30px;
+  border-radius: 20px;
+  height: 100%;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.carImage {
+  width: 100%;
+  max-width: 300px; /* Για να μην μεγαλώνει υπερβολικά */
+  height: auto;
+  object-fit: contain;
+}
+
+.simpleStats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: auto; /* Για να πάει στο κάτω μέρος */
+}
+
+.stat {
+  text-align: center;
+}
+
+.statLabel {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.statValue {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 5px;
+}

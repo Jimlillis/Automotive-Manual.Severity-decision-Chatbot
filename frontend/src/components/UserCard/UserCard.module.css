@@ -1,0 +1,63 @@
+.card {
+  background-color: #2a303c; /* Το πιο ανοιχτό σκούρο της κάρτας */
+  padding: 30px;
+  border-radius: 20px;
+  height: 100%; /* Για να πιάνει όλο το ύψος */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  background-color: #4b5563; /* Placeholder gray avatar */
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarIcon {
+  color: #d1d5db;
+}
+
+.name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.status {
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.detailIcon {
+  color: #9ca3af;
+}
+
+.label {
+  color: #9ca3af;
+}
+
+.value {
+  font-weight: 500;
+}
