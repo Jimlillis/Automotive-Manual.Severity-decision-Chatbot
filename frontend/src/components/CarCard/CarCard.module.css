@@ -1,47 +1,72 @@
+/* src/components/CarCard/CarCard.module.css */
 .card {
   background-color: #2a303c;
-  padding: 30px;
+  padding: 30px 25px; /* Μειώσαμε το padding */
   border-radius: 20px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px; /* Λίγο πιο μικρή */
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px; /* Μειώσαμε το κενό */
 }
 
 .imageContainer {
-  margin: 20px 0;
+  margin: 10px 0; /* Μειώσαμε το κενό */
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-grow: 1; /* Παίρνει τον υπόλοιπο χώρο */
 }
 
 .carImage {
   width: 100%;
-  max-width: 300px; /* Για να μην μεγαλώνει υπερβολικά */
+  max-width: 300px; /* Μικρύναμε λίγο την εικόνα */
   height: auto;
   object-fit: contain;
 }
 
-.simpleStats {
+/* CSS για τα στατιστικά στο κάτω μέρος */
+.footerStats {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: auto; /* Για να πάει στο κάτω μέρος */
 }
 
-.stat {
-  text-align: center;
+.statBadge {
+  background-color: #21252d; /* Πιο σκούρο background */
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1; /* Όλα τα badges έχουν ίσο πλάτος */
+}
+
+.statIcon {
+  color: #a3c4dc; /* Cool blue */
+}
+
+.statText {
+  display: flex;
+  flex-direction: column;
 }
 
 .statLabel {
   color: #9ca3af;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 .statValue {
-  font-size: 18px;
+  color: white;
+  font-size: 14px;
   font-weight: 600;
-  margin-top: 5px;
+  margin-top: 2px;
 }

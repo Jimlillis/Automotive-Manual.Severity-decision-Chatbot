@@ -1,8 +1,8 @@
 .button {
-  width: 100%;
+  width: 95%;
   border: none;
   cursor: pointer;
-  padding: 25px;
+  padding: 18px 20px;
   border-radius: 20px;
   display: flex;
   align-items: flex-start;
@@ -17,11 +17,11 @@
 }
 
 .emergency {
-  background-color: #dc2626; /* Κόκκινο */
+  background-color: #9f1239;
 }
 
 .manual {
-  background-color: #2563eb; /* Μπλε */
+  background-color: #1e3a8a;
 }
 
 .iconContainer {
@@ -43,13 +43,13 @@
 }
 
 .title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
-  margin: 0;
+  margin: 8px 0 3px 0;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 12px;
   opacity: 0.8;
   margin-top: 5px;
 }

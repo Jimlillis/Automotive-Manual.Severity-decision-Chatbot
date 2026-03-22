@@ -1,0 +1,198 @@
+
+.pageContainer {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #0c0f12; /* Το ίδιο πολύ σκούρο background με το Dashboard */
+  color: white;
+  padding: 20px 0; /* Λίγο padding πάνω κάτω */
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Κεντρικό Chat Container */
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 800px; /* Περιορίζουμε το πλάτος για να φαίνεται σαν κουτί στο κέντρο */
+  margin: 0 auto; /* Το κεντράρουμε στην οθόνη */
+  background-color: #121822; /* Ένα ελαφρώς πιο ανοιχτό σκούρο χρώμα από το φόντο */
+  border-radius: 20px;
+  overflow: hidden; /* Για να μην βγαίνουν τα περιεχόμενα έξω από τις στρογγυλεμένες γωνίες */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Λίγη σκιά για βάθος */
+}
+
+/* Περιοχή Μηνυμάτων */
+.messagesArea {
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto; /* Εμφάνιση scrollbar αν γεμίσει */
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Απόσταση μεταξύ των μηνυμάτων */
+}
+
+/* --- Δομή Μηνύματος --- */
+.messageWrapper {
+  display: flex;
+  align-items: flex-start; /* Ευθυγράμμιση στην κορυφή */
+  gap: 15px;
+  max-width: 85%; /* Δεν αφήνουμε τα μηνύματα να πιάσουν όλο το πλάτος */
+}
+
+/* Αν είναι του χρήστη, το στέλνουμε δεξιά */
+.wrapperUser {
+  align-self: flex-end;
+  flex-direction: row; /* Εικονίδιο δεξιά, συννεφάκι αριστερά (λόγω της σειράς στο HTML) */
+}
+
+/* Αν είναι του bot, το στέλνουμε αριστερά */
+.wrapperBot {
+  align-self: flex-start;
+}
+
+/* --- Συννεφάκια Μηνυμάτων --- */
+.messageBubble {
+  padding: 15px 20px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.messageBubble p {
+  margin: 0;
+}
+
+.bubbleBot {
+  background-color: #232b38; /* Ένα muted blue-grey για το bot */
+  color: #e2e8f0;
+  border-top-left-radius: 4px; /* Πιο οξεία γωνία πάνω αριστερά */
+}
+
+.bubbleUser {
+  background-color: #1e3a8a; /* Το soft μπλε που βάλαμε και στο κουμπί */
+  color: white;
+  border-top-right-radius: 4px; /* Πιο οξεία γωνία πάνω δεξιά */
+}
+
+/* --- Εικονίδια δίπλα στα μηνύματα --- */
+.botIconWrapper {
+  background-color: #38bdf8; /* Έντονο γαλάζιο όπως στην εικόνα */
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Για να μην μικραίνει αν το μήνυμα είναι μεγάλο */
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); /* Glow effect */
+}
+
+.botIcon {
+  color: #0f172a; /* Σκούρο χρώμα για το εικονίδιο μέσα στο γαλάζιο κουτί */
+}
+
+.userIconWrapper {
+  background-color: #334155; /* Γκρι για τον χρήστη */
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userIcon {
+  color: #94a3b8;
+}
+
+/* --- Περιοχή Εισαγωγής Κειμένου --- */
+.inputArea {
+  padding: 20px 30px;
+  background-color: #18212f; /* Λίγο διαφορετικό χρώμα για να ξεχωρίζει από τα μηνύματα */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.inputForm {
+  display: flex;
+  align-items: center;
+  background-color: #232b38; /* Ίδιο χρώμα με τα bot bubbles */
+  border-radius: 15px;
+  padding: 5px 15px;
+}
+
+.inputField {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 15px 10px;
+  font-size: 15px;
+  outline: none; /* Αφαιρούμε το μπλε περίγραμμα όταν το επιλέγουμε */
+}
+
+.inputField::placeholder {
+  color: #64748b;
+}
+
+.sendButton {
+  background-color: #38bdf8; /* Ίδιο γαλάζιο με το εικονίδιο του bot */
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sendButton:disabled {
+  background-color: #334155;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sendButton:not(:disabled):hover {
+  background-color: #0ea5e9; /* Λίγο πιο σκούρο στο hover */
+}
+
+.sendIcon {
+  color: #0f172a;
+}

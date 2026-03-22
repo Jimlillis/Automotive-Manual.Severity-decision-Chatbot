@@ -1,54 +1,53 @@
+/* src/pages/Dashboard/Dashboard.module.css */
 .container {
-  padding: 40px;
+/* padding: 20px 30px; /* Μειώσαμε το padding (πριν ήταν 40px) */
+  padding: 25px;
+  min-height: 90vh; /* Εξασφαλίζουμε ότι πιάνει όλο το ύψος */
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-  margin-bottom: 40px;
+  margin-bottom: 25px; /* Μειώσαμε το κενό κάτω από το header */
 }
 
 .appTitle {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px; /* Λίγο πιο μικρή γραμματοσειρά */
   font-weight: 800;
 }
 
 .appSubtitle {
-  margin: 5px 0 0 0;
+  margin: 3px 0 0 0;
   color: #9ca3af;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .mainContent {
   display: flex;
   flex-direction: column;
-  gap: 80px; /* Κενό ανάμεσα στις σειρές */
+  gap: 80px; 
+  flex-grow: 1; /* Παίρνει τον υπόλοιπο χώρο */
 }
 
-/* Επάνω σειρά: 2 στήλες, ίσες */
 .topRowGrid {
   display: grid;
   grid-template-columns: 1fr; /* Default για κινητά */
-  gap: 30px;
+  gap: 20px;
 }
 
-/* Κάτω σειρά: 2 στήλες, ίσες */
 .bottomRowGrid {
   display: grid;
   grid-template-columns: 1fr; /* Default για κινητά */
-  gap: 30px;
+  gap: 20px;
 }
 
-.gridItem {
-  height: 100%;
-}
-
-/* Media Query για μεγάλες οθόνες (Desktop) */
 @media (min-width: 1024px) {
   .topRowGrid {
-    grid-template-columns: 1fr 1fr; /* 2 ίσες στήλες */
+    grid-template-columns: 500px 1fr; 
   }
   
   .bottomRowGrid {
-    grid-template-columns: 1fr 1fr; /* 2 ίσες στήλες */
+    grid-template-columns: 1fr 1fr; /* Τα κουμπιά παραμένουν ίσα */
   }
 }

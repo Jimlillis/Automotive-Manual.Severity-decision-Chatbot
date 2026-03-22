@@ -1,42 +1,51 @@
+/* src/components/UserCard/UserCard.module.css */
 .card {
-  background-color: #2a303c; /* Το πιο ανοιχτό σκούρο της κάρτας */
+  background-color: #2a303c;
   padding: 30px;
   border-radius: 20px;
-  height: 100%; /* Για να πιάνει όλο το ύψος */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Κεντράρουμε ΜΟΝΟ το πάνω μέρος (Avatar + Όνομα) */
 .header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .avatar {
-  background-color: #4b5563; /* Placeholder gray avatar */
-  width: 64px;
-  height: 64px;
+  background-color: #374151;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 .avatarIcon {
-  color: #d1d5db;
+  color: #9ca3af;
 }
 
 .name {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 .status {
   color: #9ca3af;
-  font-size: 16px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-top: 5px;
 }
 
+/* Διάταξη για τα στοιχεία (Τηλέφωνο κλπ) */
 .details {
   display: flex;
   flex-direction: column;
@@ -46,18 +55,35 @@
 .detailItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 16px;
+  gap: 15px;
 }
 
-.detailIcon {
+/* Το κουτάκι γύρω από το κάθε εικονίδιο */
+.iconContainer {
+  background-color: rgba(255, 255, 255, 0.05); /* Ένα πολύ απαλό λευκό */
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #9ca3af;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
 .label {
   color: #9ca3af;
+  font-size: 12px;
+  margin-bottom: 2px;
 }
 
 .value {
-  font-weight: 500;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
 }

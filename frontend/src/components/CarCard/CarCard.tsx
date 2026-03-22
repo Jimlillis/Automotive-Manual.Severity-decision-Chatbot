@@ -1,24 +1,47 @@
 import React from 'react';
+import { Gauge, KeyRound, Wrench } from 'lucide-react'; // Προσθέσαμε το Wrench
 import styles from './CarCard.module.css';
-import CarImage from '../../assets/car-placeholder.jpg';
+import CarImage from '../../assets/car-placeholder.jpg'; // Import της εικόνας
 
 const CarCard: React.FC = () => {
   return (
     <div className={styles.card}>
-      <h2 className={styles.title}>Το Όχημά μου</h2>
+      <div className={styles.header}>
+        <div className={styles.titleArea}>
+          <h2 className={styles.title}>Το Όχημά μου</h2>
+          <p className={styles.subtitle}>BMW 520d · 2023</p>
+        </div>
+      </div>
       
+      {/* Container για την εικόνα με το spotlight effect */}
       <div className={styles.imageContainer}>
-        <img src={CarImage} alt="BMW Placeholder" className={styles.carImage} />
+        <img src={CarImage} alt="BMW" className={styles.carImage} />
       </div>
 
-      <div className={styles.simpleStats}>
-        <div className={styles.stat}>
-          <div className={styles.statLabel}>Μοντέλο:</div>
-          <div className={styles.statValue}>BMW (Placeholder)</div>
+      {/* Τα νέα στατιστικά στο κάτω μέρος */}
+      <div className={styles.footerStats}>
+        <div className={styles.statBadge}>
+          <Gauge size={20} className={styles.statIcon} />
+          <div className={styles.statText}>
+            <span className={styles.statLabel}>ΧΙΛΙΟΜΕΤΡΑ</span>
+            <span className={styles.statValue}>34,520 km</span>
+          </div>
         </div>
-        <div className={styles.stat}>
-          <div className={styles.statLabel}>Πινακίδα:</div>
-          <div className={styles.statValue}>ΑΒΓ-1234 (Placeholder)</div>
+
+        <div className={styles.statBadge}>
+          <KeyRound size={20} className={styles.statIcon} />
+          <div className={styles.statText}>
+            <span className={styles.statLabel}>ΠΙΝΑΚΙΔΑ</span>
+            <span className={styles.statValue}>ΑΒΓ-1234</span>
+          </div>
+        </div>
+
+        <div className={styles.statBadge}>
+          <Wrench size={20} className={styles.statIcon} />
+          <div className={styles.statText}>
+            <span className={styles.statLabel}>ΕΠΟΜΕΝΟ SERVICE</span>
+            <span className={styles.statValue}>15/04/26</span>
+          </div>
         </div>
       </div>
     </div>
