@@ -69,7 +69,7 @@ async def chat_endpoint(request: ChatRequest):
         normalized_error = error_message.lower()
         print(f"Error: {error_message}")
 
-        if "api key was reported as leaked" in normalized_error or "api_key_invalid" in normalized_error:
+        if "api key was reported as leaked" in normalized_error or "api_key_invalid" in normalized_error: 
             return JSONResponse(
                 status_code=403,
                 content={
@@ -82,4 +82,4 @@ async def chat_endpoint(request: ChatRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8003)
