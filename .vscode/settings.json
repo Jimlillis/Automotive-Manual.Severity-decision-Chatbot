@@ -1,0 +1,5 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python.defaultInterpreterPath": "C:\\Users\\vicky\\OneDrive\\Έγγραφα\\ai_chatbot\\Automotive-Manual.Severity-decision-Chatbot\\incident-bot\\insurance-bot-backend\\venv314\\Scripts\\python.exe",
+    "python.terminal.activateEnvironment": true
+}

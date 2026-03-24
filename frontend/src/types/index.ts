@@ -1,16 +1,12 @@
-export interface Vehicle {
-  modelName: string; 
-  year: number;     
-  plateNumber: string; 
-  kilometers: number; 
+export interface Car {    
+  licence_plate: string; 
+  brand: string;
+  model: string;
   image: string;      
-  nextServiceDate: string; 
 }
 
 export interface User {
-  fullName: string;
-  isPremium: boolean;
+  full_name: string;
   phone: string;
-  insuranceCompany: string;
-  policyNumber: string;
+  email: string;
 }

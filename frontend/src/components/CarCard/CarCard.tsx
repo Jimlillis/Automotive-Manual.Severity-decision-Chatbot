@@ -3,13 +3,21 @@ import { Gauge, KeyRound, Wrench } from 'lucide-react'; // Προσθέσαμε 
 import styles from './CarCard.module.css';
 import CarImage from '../../assets/car-placeholder.jpg'; // Import της εικόνας
 
-const CarCard: React.FC = () => {
+interface CarCardProps {
+  car: {
+    brand: string;
+    model: string;
+    licence_plate: string;
+  };
+}
+
+const CarCard: React.FC<CarCardProps> = ({ car }) => {
   return (
     <div className={styles.card}>
       <div className={styles.header}>
         <div className={styles.titleArea}>
           <h2 className={styles.title}>Το Όχημά μου</h2>
-          <p className={styles.subtitle}>BMW 520d · 2023</p>
+          <p className={styles.subtitle}>{car.brand} · {car.model}</p>
         </div>
       </div>
       
@@ -32,7 +40,7 @@ const CarCard: React.FC = () => {
           <KeyRound size={20} className={styles.statIcon} />
           <div className={styles.statText}>
             <span className={styles.statLabel}>ΠΙΝΑΚΙΔΑ</span>
-            <span className={styles.statValue}>ΑΒΓ-1234</span>
+            <span className={styles.statValue}>{car.licence_plate}</span>
           </div>
         </div>
 

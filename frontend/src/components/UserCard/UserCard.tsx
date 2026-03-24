@@ -3,7 +3,15 @@ import React from 'react';
 import { User, Phone, ShieldCheck, FileText } from 'lucide-react';
 import styles from './UserCard.module.css';
 
-const UserCard: React.FC = () => {
+interface UserCardProps {
+  user: {
+    full_name: string;
+    phone: string;
+    email: string;
+  };
+}
+
+const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
     <div className={styles.card}>
       {/* Το Header είναι κεντραρισμένο */}
@@ -11,7 +19,7 @@ const UserCard: React.FC = () => {
         <div className={styles.avatar}>
           <User size={32} className={styles.avatarIcon} />
         </div>
-        <h2 className={styles.name}>Γιώργος Παπαδόπουλος</h2>
+        <h2 className={styles.name}>{user.full_name}</h2>
         <span className={styles.status}>PREMIUM MEMBER</span>
       </div>
 
@@ -23,7 +31,7 @@ const UserCard: React.FC = () => {
           </div>
           <div className={styles.textContainer}>
             <span className={styles.label}>Τηλέφωνο Επικοινωνίας</span>
-            <span className={styles.value}>+30 210 123 4567</span>
+            <span className={styles.value}>{user.phone || 'Μη διαθέσιμο'}</span>
           </div>
         </div>
 
